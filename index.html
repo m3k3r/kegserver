@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAYOUT Water Quality Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --blue: #0005ff;
+            --dark-blue: #282837;
+            --aqua: #32E6FF;
+            --orange: #ff5500;
+            --light-grey: #E6E6E6;
+            --gray: #888989;
+            --white: #FFFFFF;
+            --black: #000000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--white);
+            color: var(--dark-blue);
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+            width: 10vw;
+            max-width: 60vw;
+        }
+
+        .container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            line-height: 100%;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--dark-blue);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .data-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--light-grey);
+        }
+
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .data-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .data-value {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--dark-blue);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .watermark {
+                width: 70vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="Wayout Logotype Alpha Black RGB.png" alt="WAYOUT" class="watermark">
+    <div class="container">
+        <h1>Water Content</h1>
+        <div class="data-grid">
+            <div class="data-card">
+                <div class="data-label">Best Before</div>
+                <div class="data-value" id="bestBefore">-</div>
+            </div>
+            <div class="data-card">
+                <div class="data-label">pH Level</div>
+                <div class="data-value" id="pH">-</div>
+            </div>
+            <div class="data-card">
+                <div class="data-label">Turbidity</div>
+                <div class="data-value" id="turbidity">- NTU</div>
+            </div>
+            <div class="data-card">
+                <div class="data-label">Temperature</div>
+                <div class="data-value" id="temperature">-°C</div>
+            </div>
+            <div class="data-card">
+                <div class="data-label">Conductivity</div>
+                <div class="data-value" id="conductivity">- µS/cm</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateRandomData() {
+            const now = new Date();
+            const bestBefore = new Date(now.setDate(now.getDate() + 14)).toISOString().split('T')[0];
+            
+            return {
+                best_before: bestBefore,
+                pH: (6.5 + Math.random() * 2).toFixed(2),
+                turbidity: (Math.random() * 5).toFixed(2),
+                temperature: (20 + Math.random() * 5).toFixed(2),
+                conductivity: (100 + Math.random() * 400).toFixed(2)
+            };
+        }
+
+        function updateData() {
+            const data = generateRandomData();
+            document.getElementById('bestBefore').textContent = data.best_before;
+            document.getElementById('pH').textContent = data.pH;
+            document.getElementById('turbidity').textContent = data.turbidity + ' NTU';
+            document.getElementById('temperature').textContent = data.temperature + '°C';
+            document.getElementById('conductivity').textContent = data.conductivity + ' µS/cm';
+        }
+
+        // Update data every 5 seconds
+        updateData();
+        setInterval(updateData, 5000);
+    </script>
+</body>
+</html>
