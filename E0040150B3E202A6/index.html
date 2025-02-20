@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WAYOUT Keg E0040150B3E202A6</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --blue: #0005ff;
@@ -164,20 +163,9 @@
                 <div class="data-value" id="waterContent">- L</div>
             </div>
         </div>
-        <div class="chart-container">
-            <canvas id="historyChart"></canvas>
-        </div>
     </div>
 
     <script>
-        // Simulated historical data
-        let historicalData = {
-            timestamps: [],
-            waterContent: [],
-            temperature: [],
-            pH: []
-        };
-
         function generateRandomData() {
             const now = new Date();
             const bestBefore = new Date(now.setDate(now.getDate() + 14)).toISOString().split('T')[0];
@@ -200,79 +188,9 @@
             document.getElementById('temperature').textContent = data.temperature + '°C';
             document.getElementById('conductivity').textContent = data.conductivity + ' µS/cm';
             document.getElementById('waterContent').textContent = data.water_content + ' L';
-
-            // Update historical data
-            const now = new Date();
-            historicalData.timestamps.push(now.toLocaleTimeString());
-            historicalData.waterContent.push(data.water_content);
-            historicalData.temperature.push(data.temperature);
-            historicalData.pH.push(data.pH);
-
-            // Keep only last 20 data points
-            if (historicalData.timestamps.length > 20) {
-                historicalData.timestamps.shift();
-                historicalData.waterContent.shift();
-                historicalData.temperature.shift();
-                historicalData.pH.shift();
-            }
-
-            updateChart();
-        }
-
-        // Initialize chart
-        let chart;
-        function initChart() {
-            const ctx = document.getElementById('historyChart').getContext('2d');
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [
-                        {
-                            label: 'Water Content (L)',
-                            data: [],
-                            borderColor: 'rgb(0, 5, 255)',
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Temperature (°C)',
-                            data: [],
-                            borderColor: 'rgb(255, 85, 0)',
-                            tension: 0.4
-                        },
-                        {
-                            label: 'pH',
-                            data: [],
-                            borderColor: 'rgb(50, 230, 255)',
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateChart() {
-            chart.data.labels = historicalData.timestamps;
-            chart.data.datasets[0].data = historicalData.waterContent;
-            chart.data.datasets[1].data = historicalData.temperature;
-            chart.data.datasets[2].data = historicalData.pH;
-            chart.update();
         }
 
         // Initialize and start updates
-        initChart();
         updateData();
         setInterval(updateData, 5000);
     </script>
